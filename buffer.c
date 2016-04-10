@@ -219,10 +219,10 @@ size_t buffer_move_logic(void *buf, void *data,
     struct Buffer *buffer = buf;
     if (!is_buffer(buffer)) return 0;
     if (!length || !data) {
-        /* FIXME: warn the messages:
-         * "Buffer: Canot move data because either length (%lu) or
+         /* "Buffer: Canot move data because either length (%lu) or
          *  data (%p) are "invalid\n", length, data
 	 */
+	perror("Buffer: Cannot move data");
         return 0;
     }
     struct Packet *np = get_packet();
@@ -256,18 +256,17 @@ buffer_copy_logic(void *buf, void *data,
 {
     struct Buffer *buffer = buf;
     if (!length || !data) {
-        /* FIXME: warn the message
-         * "Buffer: Canot copy data because either length (%lu) or
+         /* "Buffer: Canot copy data because either length (%lu) or
          * data (%p) are invalid\n", length, data
 	     */
+	perror("Buffer: Cannot copy data");
         return 0;
     }
     size_t to_copy = length;
     struct Packet *np = get_packet();
     if (!np) {
-        /* FIXME: warn the message
-	     * "Couldn't allocate memory for the buffer (on copy)"
-         */
+	 /* "Couldn't allocate memory for the buffer (on copy)"*/
+	perror("Couldn't allocate memory:");
         return 0;
     }
     /* set marker for packet interrupt */
@@ -282,9 +281,9 @@ buffer_copy_logic(void *buf, void *data,
             tmp->length = BUFFER_PACKET_SIZE;
             tmp->next = get_packet();
             if (!(tmp->next)) {
-                /* FIXME: warn the message
-                 * "Couldn't allocate memory for the buffer (on copy)"
+                 /* "Couldn't allocate memory for the buffer (on copy)"
                  */
+		perror("Couldn't allocate");
                 tmp = np;
                 while (tmp) {
                     np = tmp;
